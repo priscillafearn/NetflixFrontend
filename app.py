@@ -54,7 +54,7 @@ if view == page_list[0]:
     
 
     # call our IMDB API with param dictinary made from IMDB response 
-    url = "http://127.0.0.1:8000/predict?"
+    url = "https://netflix-4zrwqiad6a-ew.a.run.app/predict?"  # call the API hosted by Docker
     response = requests.get(url, params = params).json()
 
     st.write(f'The predicted score of the movie {movie_title} is {round(response["prediction"], 2)}')
