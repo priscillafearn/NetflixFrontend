@@ -3,7 +3,7 @@ import requests
 import pandas as pd
 import os 
 
-
+URL = "https://netflix-4zrwqiad6a-ew.a.run.app/predict?"  # call the API hosted by Docker
 page_list = ['Movie Search','Build Your Own']
 
 
@@ -17,8 +17,8 @@ if view == page_list[0]:
     c1, c2 = st.beta_columns(2)
     
     # 1st step make IMDB API call 
-    url = f'http://www.omdbapi.com/?t={movie_title}&apikey=ef5507df'
-    response = requests.get(url).json()
+    IMDb_url = f'http://www.omdbapi.com/?t={movie_title}&apikey=ef5507df'
+    response = requests.get(IMDb_url).json()
     # st.write(response) 
     
     # printing the poster image
@@ -26,7 +26,7 @@ if view == page_list[0]:
     
     # # parse response to get the information that I want 
     # put fetaures in the params dictionary
-    params = {"year":response["Year"],
+    params = {"year":response.get("Year", 2021),
               "rated":response["Rated"],
               "released":response["Released"],
               "runtime":response["Runtime"],
@@ -52,8 +52,7 @@ if view == page_list[0]:
     
 
     # call our IMDB API with param dictinary made from IMDB response 
-    url = "https://netflix-4zrwqiad6a-ew.a.run.app/predict?"  # call the API hosted by Docker
-    response = requests.get(url, params = params).json()
+    response = requests.get(URL, params = params).json()
 
     st.write(f'The predicted score of the movie {movie_title} is {round(response["prediction"], 2)}')
 
@@ -104,9 +103,8 @@ elif view == page_list[1]:
         # enter here the address of your flask api
     
 
-        url_model = "http://127.0.0.1:8000/predict?"
         
-        response = requests.get(url_model, params=params_model).json()
+        response = requests.get(URL, params=params_model).json()
         
         st.write(f'The predicted score of your movie creation is of {round(response["prediction"], 2)}')
         
