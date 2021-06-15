@@ -1,7 +1,5 @@
 import streamlit as st
 import requests
-from streamlit.elements.altair import generate_chart
-from streamlit.proto.Selectbox_pb2 import Selectbox
 import pandas as pd
 import os 
 
