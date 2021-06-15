@@ -2,18 +2,26 @@ import streamlit as st
 import requests
 import pandas as pd
 import os 
+from PIL import Image
 
 URL = "https://netflix-4zrwqiad6a-ew.a.run.app/predict?"  # call the API hosted by Docker
 page_list = ['Movie Search','Build Your Own']
 
 
+#showing a header
 st.header('Movie Score Prediction')
 view = st.sidebar.selectbox('Select',options = page_list)
+
 
 # below is the code for the first page_list -> Movie Search
 if view == page_list[0]:
     # add here input information 
     movie_title = st.text_input('Input movie name')
+    
+    #showing welcome picture
+    image = Image.open('FrontEnd.jpg')
+    st.image(image, caption='Netflix Movie Prediction', use_column_width=True)
+    
     c1, c2 = st.beta_columns(2)
     
     # 1st step make IMDB API call 
@@ -27,17 +35,18 @@ if view == page_list[0]:
     # # parse response to get the information that I want 
     # put fetaures in the params dictionary
     params = {"year":response.get("Year", 2021),
-              "rated":response["Rated"],
-              "released":response["Released"],
-              "runtime":response["Runtime"],
-              "genre": response["Genre"],
-              "director":response["Director"],
-              "writer": response["Writer"],
-              "actors": response["Actors"],
-              "language":response["Language"],
-              "country":response["Country"],
-              "production": response["Production"],
-              "age": response["Year"]}
+              "rated":response.get("Rated", "Unrated"),
+              "released":response.get("Released", "unavailable"),
+              "runtime":response.get("Runtime", "120 min"),
+              "genre": response.get("Genre", "unkown"),
+              "director":response.get("Director", "unknown"),
+              "writer": response.get("Writer", "unknown"),
+              "actors": response.get("Actors", "unkonw"),
+              "language":response.get("Language", "unkown"),
+              "country":response.get("Country", "unkonw"),
+              "production": response.get("Production", "unavailable"),
+              "age": response.get("Year", 2021)
+              }
            
     
     c2.write(f'Movie Tttle: {response["Title"]}')
@@ -53,8 +62,7 @@ if view == page_list[0]:
 
     # call our IMDB API with param dictinary made from IMDB response 
     response = requests.get(URL, params = params).json()
-
-    st.write(f'The predicted score of the movie {movie_title} is {round(response["prediction"], 2)}')
+    st.write(f'**The predicted score of the movie {movie_title} is {round(response["prediction"], 2)}**')
 
 
     
@@ -79,6 +87,10 @@ elif view == page_list[1]:
     production =st.selectbox('Select production of movie:', options= ['Almerica Film', 'Jersey Films', "Columbia Pictures Corporation", 'Miramax Films' ,
                                                                        'Bedford Falls Productions', 'Universal Pictures',
                                                                        'First Snow Production', 'Capitol Films', 'Sony Pictures Classics'])
+  
+  
+  
+
     # actors = st.text_input('Input names of actors here')
     button = st.button('Rate my movie 🚀 ')
     
