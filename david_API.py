@@ -51,10 +51,7 @@ elif analysis == "Select Movie Features":
     rated = st.selectbox("PG Rating:", options= ['TV-G', 'TV-PG', 'Kid', 'TV-Y7', 'TV-Y7-FV', 'TV-Y', 'E','TV-13', 'TV-14', 'PG-13', 'PG', 'M','TV-MA', 'NC-17', 'R', '18 and over', 'Unrated', 'UNRATED'])
     country = st.selectbox("Country of origin:", options = ["Europe", "United States", "Asia"])
     language =  st.text_input
-    released = 
-    writer = 
-    director = 
-    actor = 
+
     
     url_model = "http://127.0.0.1:8000/predict?"
     params = {"year":year, "runtime":runtime, "rated":rated, "country":country}
