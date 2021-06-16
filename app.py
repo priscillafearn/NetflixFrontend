@@ -18,54 +18,55 @@ if view == page_list[0]:
     # add here input information 
     movie_title = st.text_input('Input movie name')
     
-    #showing welcome picture
-    image = Image.open('FrontEnd.jpg')
-    st.image(image, caption='Netflix Movie Prediction', use_column_width=True)
+    if movie_title: 
     
-    c1, c2 = st.beta_columns(2)
-    
-    # 1st step make IMDB API call 
-    IMDb_url = f'http://www.omdbapi.com/?t={movie_title}&apikey=ef5507df'
-    response = requests.get(IMDb_url).json()
-    # st.write(response) 
-    
-    # printing the poster image
-    c1.image(response["Poster"]) 
-    
-    # # parse response to get the information that I want 
-    # put fetaures in the params dictionary
-    params = {"year":response.get("Year", 2021),
-              "rated":response.get("Rated", "Unrated"),
-              "released":response.get("Released", "unavailable"),
-              "runtime":response.get("Runtime", "120 min"),
-              "genre": response.get("Genre", "unkown"),
-              "director":response.get("Director", "unknown"),
-              "writer": response.get("Writer", "unknown"),
-              "actors": response.get("Actors", "unkonw"),
-              "language":response.get("Language", "unkown"),
-              "country":response.get("Country", "unkonw"),
-              "production": response.get("Production", "unavailable"),
-              "age": response.get("Year", 2021)
-              }
-           
-    
-    c2.write(f'Movie Tttle: {response["Title"]}')
-    #c2.markdown(<*font color=‘red’>THIS TEXT WILL BE RED</*font>)
-    c2.write(f'Year of release: {response["Year"]}')
-    c2.write(f'Length of movie: {response["Runtime"]}')
-    c2.write(f'Country of origin: {response["Country"]}')
-    c2.write(f'Director: {response["Director"]}')
-    c2.write(f'Actor: {response["Actors"]}')
-    c2.write(f'Language: {response["Language"]}')
-    c2.write(f'PG Rating: {response["Rated"]}')
-    
+        c1, c2 = st.beta_columns(2)
+        
+        # 1st step make IMDB API call 
+        IMDb_url = f'http://www.omdbapi.com/?t={movie_title}&apikey=ef5507df'
+        response = requests.get(IMDb_url).json()
+        # st.write(response) 
+        
+        # printing the poster image
+        c1.image(response["Poster"]) 
+        
+        # # parse response to get the information that I want 
+        # put fetaures in the params dictionary
+        params = {"year":response.get("Year", 2021),
+                "rated":response.get("Rated", "Unrated"),
+                "released":response.get("Released", "unavailable"),
+                "runtime":response.get("Runtime", "120 min"),
+                "genre": response.get("Genre", "unkown"),
+                "director":response.get("Director", "unknown"),
+                "writer": response.get("Writer", "unknown"),
+                "actors": response.get("Actors", "unkonw"),
+                "language":response.get("Language", "unkown"),
+                "country":response.get("Country", "unkonw"),
+                "production": response.get("Production", "unavailable"),
+                "age": response.get("Year", 2021)
+                }
+            
+        
+        c2.write(f'Movie Tttle: {response["Title"]}')
+        #c2.markdown(<*font color=‘red’>THIS TEXT WILL BE RED</*font>)
+        c2.write(f'Year of release: {response["Year"]}')
+        c2.write(f'Length of movie: {response["Runtime"]}')
+        c2.write(f'Country of origin: {response["Country"]}')
+        c2.write(f'Director: {response["Director"]}')
+        c2.write(f'Actor: {response["Actors"]}')
+        c2.write(f'Language: {response["Language"]}')
+        c2.write(f'PG Rating: {response["Rated"]}')
+        
 
-    # call our IMDB API with param dictinary made from IMDB response 
-    response = requests.get(URL, params = params).json()
-    st.write(f'**The predicted score of the movie {movie_title} is {round(response["prediction"], 2)}**')
+        # call our IMDB API with param dictinary made from IMDB response 
+        response = requests.get(URL, params = params).json()
+        st.write(f'**The predicted score of the movie {movie_title} is {round(response["prediction"], 2)}**')
 
-
-    
+    else:
+        
+        #showing welcome picture
+        image = Image.open('FrontEnd.jpg')
+        st.image(image, caption='Netflix Movie Prediction', use_column_width=True)
 
 # below is the code for the other page_list -> Build Your Own
 elif view == page_list[1]:
@@ -118,7 +119,7 @@ elif view == page_list[1]:
         
         response = requests.get(URL, params=params_model).json()
         
-        st.write(f'The predicted score of your movie creation is of {round(response["prediction"], 2)}')
+        st.write(f'The predicted score of your movie creation is of {round(response["prediction"], 2)}/5')
         
     
  
