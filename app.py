@@ -1,8 +1,7 @@
 import streamlit as st
 import requests
 import pandas as pd
-import os 
-from PIL import Image
+import os
 import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
@@ -135,9 +134,7 @@ if view == page_list[0]:
     else:
         
         #showing welcome picture
-        #image = Image.open('FrontEnd.jpg')
-        image = image_mask = Image.open('final_pic.png')
-        st.image(image, caption='Netflix Movie Prediction', use_column_width=True)
+        st.image('final_pic.png')
 
 # below is the code for the other page_list -> Build Your Own
 elif view == page_list[1]:
