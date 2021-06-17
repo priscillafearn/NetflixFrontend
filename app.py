@@ -73,7 +73,7 @@ if view == page_list[0]:
         #assign green color for good prediciton movies and red color for bad prediction movies
         
         
-        url = "/Users/davidguenoun/code/davidguenoun/wagon_final_project_netflix/NetflixFrontend/raw_data/merged_movies_by_index.csv"
+        url = "merged_movies_by_index.csv"
         df = pd.read_csv(url)
         x = df['avg_review_score']
         
