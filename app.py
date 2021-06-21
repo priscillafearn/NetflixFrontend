@@ -8,16 +8,14 @@ import numpy as np
 import plotly.figure_factory as ff
 
 
-
-
 URL = "https://netflix-4zrwqiad6a-ew.a.run.app/predict?"  # call the API hosted by Docker
 page_list = ['Movie Search','Build Your Own']
 
 
-#showing a header
-#st.header('Movie Score Prediction')
+#Adding the title with markdown which allows you to edit the colour and font 
 st.markdown("<h1 style='text-align: center; color: Black;'>Movie Score Prediction</h1>", unsafe_allow_html=True)
 
+#Add the sidebar which will include all the pages included in the above page_list 
 view = st.sidebar.selectbox('Select',options = page_list)
 
 # below is the code for the first page_list -> Movie Search
@@ -26,7 +24,7 @@ if view == page_list[0]:
     movie_title = st.text_input('Input movie title :')
     
     if movie_title: 
-    
+        #Editting the visual to be made of 2 columns 
         c1, c2 = st.beta_columns(2)
         
         # 1st step make IMDB API call 
@@ -34,11 +32,10 @@ if view == page_list[0]:
         response = requests.get(IMDb_url).json()
         # st.write(response) 
         
-        # printing the poster image
+        #Adding the poster image
         c1.image(response["Poster"]) 
         
-        # # parse response to get the information that I want 
-        # put fetaures in the params dictionary
+        #Adding the fetaures in the params dictionary
         params = {"year":response.get("Year", 2021),
                 "rated":response.get("Rated", "Unrated"),
                 "released":response.get("Released", "unavailable"),
@@ -56,7 +53,6 @@ if view == page_list[0]:
             
         
         c2.write(f'**Movie Title**: {response["Title"]}')
-        #c2.markdown(<*font color=‘red’>THIS TEXT WILL BE RED</*font>)
         c2.write(f'**Year of Release**: {response["Year"]}')
         c2.write(f'**Length of Movie**: {response["Runtime"]}')
         c2.write(f'**Country of Origin**: {response["Country"]}')
@@ -69,13 +65,10 @@ if view == page_list[0]:
         # call our IMDB API with param dictinary made from IMDB response 
         response = requests.get(URL, params = params).json()
         
-        #assign green color for good prediciton movies and red color for bad prediction movies
-        
-        
-        url = "merged_movies_by_index.csv"
+        ## Assigning green color for good prediciton movies and red color for bad prediction movies
+        url = "merged_movies_by_index.csv" #Note that this is a file saved locally
         df = pd.read_csv(url)
         x = df['avg_review_score']
-        
         
         
         if response["prediction"] > 3:
@@ -90,13 +83,11 @@ if view == page_list[0]:
     
                 arr = x
                 fig, ax = plt.subplots()
-                #ax.plot(arr)
+        
                 
                 sns.distplot(df["avg_review_score"],hist = False, color = "r",ax = ax)
                 ax.axvline(x=response["prediction"], c="b")
                 st.pyplot(fig)
-                
-                #show the sentence
                 
                 percentile = round(1 - (df['avg_review_score'] > response["prediction"]).mean(),2)
                 percentile = '{:.0%}'.format(percentile)
@@ -107,7 +98,7 @@ if view == page_list[0]:
         else:
             st.markdown('<style>h1{color: red;}</style>', unsafe_allow_html=True)
             st.subheader(f' The predicted score is {round(response["prediction"], 2)}/5') 
-            #st.subheader('Investment decision : declined') 
+ 
             st.markdown("<h3 style='text-align: left; color: Red;'> Investment Declined</h1>", unsafe_allow_html=True)
             
             distribution = st.button('show review score distribution')
@@ -115,7 +106,7 @@ if view == page_list[0]:
     
                 arr = x
                 fig, ax = plt.subplots()
-                #ax.plot(arr)
+            
                 
                 sns.distplot(df["avg_review_score"],hist = False, color = "r",ax = ax)
                 ax.axvline(x=response["prediction"], c="b")
@@ -123,13 +114,7 @@ if view == page_list[0]:
                 
                 percentile = round(1 - (df['avg_review_score'] > response["prediction"]).mean(),2)
                 percentile = '{:.0%}'.format(percentile)
-                st.subheader(f"This movie has a better review score than {percentile} of movies available on Netflix")
-            
-            
-            
-            
-            
-                 
+                st.subheader(f"This movie has a better review score than {percentile} of movies available on Netflix")     
 
     else:
         
@@ -142,19 +127,11 @@ elif view == page_list[1]:
     st.header('Build Your Own')
     runtime = st.slider('Total runtime of movie in minutes', min_value = 60, max_value = 200, step = 5)
     c1, c2 = st.beta_columns(2)
-    
-  
-    
-    # year = st.slider("Year of movie release", min_value = 1950, max_value= 2022, step=1)
-    # runtime = st.number_input('Insert the runtime of the movie in minutes')
-    # runtime = st.slider('Total runtime of movie in minutes', min_value = 60, max_value = 200, step = 5)
+     
     rated = c1.selectbox('PG Rating', options = ["PG-13", "R", "Unrated", "E", "18 and over"])
     country = c1.selectbox('Country of Origin: ', options = ["Africa", "Asia", "Australia", "Europe", "South America", "United States", "New Zealand"])
     language = c1.multiselect("Language:",["Arabic","Chinese","English", "French", "German", "Italian", "Russian", "Spanish", "Thai", "Vietnamese"])
-    # released = c2.selectbox('Input month of movie release:', options=["January", "February", "March", "April", "May", "June", "July", " August", "September", "October", "November", "December"])
-    # age = st.number_input('Insert here how many years ago was the movie luanched')
     writer = c1.selectbox('Input Name of Writer:',options = ["Quentin Tarantino","Steven Spielberg","Martin Scorsese","Francis Ford Coppola","Stanley Kubrick"])
-    #director = c2.text_input('Input name of director:')
     director = c2.selectbox("Select Names of Director:",options = ['Woody Allen','Alfred Hitchcock','Steven Spielberg', 'Clint Eastwood','Mike van Diem','Kirby Dick','Yasuhiro Horiuchi','Elliott Nugent','Dwight Hemion, Peter Israelson'])
     actors = c2.multiselect('Select Names of Actors', options= ['Jack Nicholson','Arnold Schwarzenegger', 'Sylvester Stallone','Robin Williams','Robert De Niro',' Scott Sampson','Jan Decleir',' Fedja van Huêt',' Betty Schuurman',' Tamar van den Dop'])
     genre = c2.multiselect('Select Genre of Movie:', options= ["Documentary", "Animation", "Family" , "Crime", "Drama", "Mystery", "Comedy", "Crime", "Sci-Fi", "Thriller"])
@@ -162,10 +139,7 @@ elif view == page_list[1]:
                                                                        'Bedford Falls Productions', 'Universal Pictures',
                                                                        'First Snow Production', 'Capitol Films', 'Sony Pictures Classics'])
   
-   
-    # actors = st.text_input('Input names of actors here')
     button = c1.button('Rate my movie 🚀 ')
-    
     
     
     if button:
@@ -185,9 +159,7 @@ elif view == page_list[1]:
         age=0,
         )
         
-        # enter here the address of your flask api
-    
-
+        # flask api
         
         response = requests.get(URL, params=params_model).json()
         
@@ -208,7 +180,7 @@ elif view == page_list[1]:
             
     
         
-        #st.header(f'**The predicted score of this movie is {round(response["prediction"], 2)}/5**')
+       
         
     
  
